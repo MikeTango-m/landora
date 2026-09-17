@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ──────────────────────────────────────────────────────────────────────────
+   Landora tokens — black / white / electric-blue system from the client brief.
+   These hex values are authoritative (they override Nocturne's purple accent).
+   ────────────────────────────────────────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: #05070d;
+  --color-ink-2: #080b14;
+  --color-fg: #ffffff;
+  --color-fg-2: #a7afbe;
+  --color-muted: #818b9d;
+  --color-badge: #c9d2e0;
+  --color-soft: #e8edf5;
+  --color-accent: #2563eb;
+  --color-accent-700: #1d4ed8;
+  --color-accent-900: #1e3a8a;
+  --color-sky: #38bdf8;
+  --color-sky-300: #7dd3fc;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-drift: drift 22s ease-in-out infinite;
+  --animate-float: float 16s ease-in-out infinite;
+  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
+
+  @keyframes drift {
+    0%, 100% { transform: translate3d(-3%, -2%, 0) scale(1); }
+    50% { transform: translate3d(4%, 3%, 0) scale(1.12); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.12; }
+    50% { transform: translate3d(6px, -26px, 0); opacity: 0.5; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.55); }
+    50% { opacity: 0.55; box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    /* Clears the fixed navbar (~82px) for anchors and focused form fields. */
+    scroll-padding-top: 100px;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: rgba(37, 99, 235, 0.45);
+  }
+  /* Nocturne rule: themed ring instead of the browser default. */
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 2px;
+  }
+}
+
+/* ── Hero surfaces (long gradients kept out of the JSX) ───────────────────── */
+@layer components {
+  .hero-base {
+    background:
+      radial-gradient(120% 90% at 78% 32%, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0) 58%),
+      radial-gradient(80% 70% at 8% 8%, rgba(56, 189, 248, 0.1) 0%, rgba(5, 7, 13, 0) 60%),
+      linear-gradient(180deg, #080b14 0%, #05070d 62%, #05070d 100%);
+  }
+  .hero-drift {
+    background: radial-gradient(45% 45% at 60% 45%, rgba(37, 99, 235, 0.16) 0%, rgba(5, 7, 13, 0) 70%);
+  }
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 78px 78px;
+    mask-image: radial-gradient(75% 65% at 50% 40%, #000 0%, transparent 85%);
+    -webkit-mask-image: radial-gradient(75% 65% at 50% 40%, #000 0%, transparent 85%);
+  }
+  .hero-cursor-glow {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.35) 0%, rgba(37, 99, 235, 0.1) 42%, rgba(37, 99, 235, 0) 70%);
+  }
+  .hero-bottom-fade {
+    background: linear-gradient(180deg, rgba(5, 7, 13, 0) 0%, #05070d 82%);
+  }
+  .hero-badge {
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.16), rgba(5, 7, 13, 0.2));
+    box-shadow: inset 0 0 26px rgba(37, 99, 235, 0.18);
+  }
+  .hero-headline-gradient {
+    background: linear-gradient(100deg, #ffffff 2%, #7dd3fc 34%, #2563eb 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-rule {
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.55), rgba(56, 189, 248, 0));
+  }
+  .hero-cta-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 55%, #1e3a8a 100%);
+    box-shadow: 0 10px 34px rgba(37, 99, 235, 0.35), 0 0 0 1px rgba(37, 99, 235, 0.25);
+  }
+  .hero-cta-primary:hover {
+    box-shadow: 0 14px 46px rgba(37, 99, 235, 0.55), 0 0 0 1px rgba(125, 211, 252, 0.4);
+  }
+  .hero-video-glow {
+    background: radial-gradient(50% 50% at 50% 45%, rgba(37, 99, 235, 0.42) 0%, rgba(37, 99, 235, 0.12) 45%, rgba(5, 7, 13, 0) 72%);
+  }
+  .hero-video {
+    mask-image: radial-gradient(58% 62% at 52% 50%, #000 30%, rgba(0, 0, 0, 0.6) 62%, transparent 84%);
+    -webkit-mask-image: radial-gradient(58% 62% at 52% 50%, #000 30%, rgba(0, 0, 0, 0.6) 62%, transparent 84%);
+  }
+  .hero-floor-shadow {
+    background: radial-gradient(50% 50% at 50% 50%, rgba(2, 3, 8, 0.85) 0%, rgba(2, 3, 8, 0) 72%);
+  }
+}
+
+/* ── Spotlight cards (glow follows the pointer via --mx/--my) ─────────────── */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(37, 99, 235, 0.16), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ── Project dialog ───────────────────────────────────────────────────────── */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+.project-dialog[open] {
+  animation: dialog-in 0.45s var(--ease-expo);
+}
+.project-dialog[open]::backdrop {
+  animation: backdrop-in 0.3s ease-out;
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Reduced motion: stop ambient loops. Entrance, parallax, magnetic and video
+   playback are handled in JS (they read the same media query). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-drift,
+  .animate-float,
+  .animate-pulse-dot,
+  .project-dialog[open],
+  .project-dialog[open]::backdrop {
+    animation: none !important;
+  }
 }
