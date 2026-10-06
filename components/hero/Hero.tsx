@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { HeroVideo } from "./HeroVideo";
 import { MagneticLink } from "./MagneticLink";
@@ -52,6 +52,10 @@ export function Hero({ showGrid = true, showParticles = true, cursorGlow = true 
   const rootRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll parallax
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 500], [0, 100], { clamp: true });
 
   // Cursor glow + parallax: refs and rAF only, never React state per mousemove.
   useEffect(() => {
@@ -223,6 +227,7 @@ export function Hero({ showGrid = true, showParticles = true, cursorGlow = true 
           variants={fadeScale}
           custom={at(0.5, 1.4)}
           className="relative min-w-0 flex-[1_1_300px] self-center"
+          style={{ y: reduce ? 0 : parallaxY }}
         >
           <div ref={stageRef} className="relative h-[clamp(300px,44vw,660px)] will-change-transform">
             <div aria-hidden className="hero-video-glow pointer-events-none absolute top-[12%] right-[-6%] bottom-[8%] left-[8%] blur-[26px]" />

@@ -6,8 +6,10 @@ import { PROJECT_CATEGORIES, PROJECTS, type Project } from "@/content/projects";
 import { EASE_EXPO } from "@/components/hero/motion";
 import { ConceptTag, ProjectDialog } from "./ProjectDialog";
 import { ProjectMedia } from "./ProjectMedia";
+import { useScrollAnimationCards } from "@/lib/useScrollAnimation";
 
 export function ProjectsSection() {
+  useScrollAnimationCards();
   const [category, setCategory] = useState<string>(PROJECT_CATEGORIES[0]);
   const [selected, setSelected] = useState<Project | null>(null);
 
@@ -93,7 +95,8 @@ export function ProjectsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }}
                   viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.7, ease: EASE_EXPO, delay: (i % 2) * 0.08 }}
+                  transition={{ duration: 0.7, ease: EASE_EXPO, delay: i * 0.12 }}
+                  data-scroll-scale
                 >
                   <ProjectCard project={project} onOpen={() => setSelected(project)} />
                 </motion.li>
