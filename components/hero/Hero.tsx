@@ -8,6 +8,7 @@ import { fadeScale, fadeUp, lineRise, type Reveal } from "./motion";
 import { Navbar } from "./Navbar";
 import { FINE_POINTER, REDUCED_MOTION, useMediaQuery } from "./use-media-query";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
+import LiveOrb from "@/components/ui/live-orb";
 
 const primaryCta = whatsappLink(WHATSAPP_MESSAGES.landingPage);
 
@@ -222,7 +223,7 @@ export function Hero({ showGrid = true, showParticles = true, cursorGlow = true 
           </motion.div>
         </div>
 
-        {/* Video column */}
+        {/* Video/Orb column */}
         <motion.div
           variants={fadeScale}
           custom={at(0.5, 1.4)}
@@ -231,7 +232,17 @@ export function Hero({ showGrid = true, showParticles = true, cursorGlow = true 
         >
           <div ref={stageRef} className="relative h-[clamp(300px,44vw,660px)] will-change-transform">
             <div aria-hidden className="hero-video-glow pointer-events-none absolute top-[12%] right-[-6%] bottom-[8%] left-[8%] blur-[26px]" />
-            <HeroVideo paused={reduce} />
+
+            {/* Toggle between HeroVideo and LiveOrb - using LiveOrb by default */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <LiveOrb
+                variant="webgl"
+                size={380}
+                colors={["#0EA5E9", "#2563EB", "#7DD3FC"]}
+                interactive={pointerFx}
+              />
+            </div>
+
             <div aria-hidden className="hero-floor-shadow pointer-events-none absolute right-[2%] bottom-[6%] left-[14%] h-[14%] blur-[18px]" />
           </div>
         </motion.div>
